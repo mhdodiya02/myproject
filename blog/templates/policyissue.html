@@ -774,44 +774,43 @@
                 </span>
             </div> {% endcomment %}
             <div style="overflow-x: auto;">
-              <!-- <center><h4 style="color: blue;">Policy Issue Data Records</h4></center> -->
-              
-              <table class="table table-bordered" id="dataRecords">
-                <thead>
-                  <tr>
-                    <th style="border: 2px solid black;">Edit</th>
-                    <th style="border: 2px solid black;">Delte</th><!-- New column for delete button -->
-                    <th style="border: 2px solid black;">Date</th>
-                    <th style="border: 2px solid black;">Name</th>
-                    <th style="border: 2px solid black;">Mobile Number</th>
-                    <th style="border: 2px solid black;">CKYC Number</th>
-                    <th style="border: 2px solid black;">Policy Number</th>
-                    <th style="border: 2px solid black;">Vehicle Number</th>
-                    <th style="border: 2px solid black;">Vehicle</th>
-                    <th style="border: 2px solid black;">Location</th>
-                    <th style="border: 2px solid black;">HP Bank</th>
-                    <th style="border: 2px solid black;">Business Type</th>
-                    <th style="border: 2px solid black;">Insurance Type</th>
-                    <th style="border: 2px solid black;">Insurance Portal</th>
-                    <th style="border: 2px solid black;">Insurance Company</th>
-                    <th style="border: 2px solid black;">Payment From Customer</th>
-                    <th style="border: 2px solid black;">Payment SOS</th>
-                    <th style="border: 2px solid black;">Policy Start Date</th>
-                    <th style="border: 2px solid black;">Policy End Date</th>
-                    <th style="border: 2px solid black;">NCB</th>
-                    <th style="border: 2px solid black;">Premium</th>
-                    <th style="border: 2px solid black;">OD/Net Premium</th>
-                    <th style="border: 2px solid black;">Commission</th>
-                    <th style="border: 2px solid black;">Profit</th>
-                    <th style="border: 2px solid black;">TDS</th>
-                    <th style="border: 2px solid black;">Profit After TDS</th>
-                    <th style="border: 2px solid black;">Net Profit</th>
-                    <th style="border: 2px solid black;">Payout/Discount %</th>
-                    <th style="border: 2px solid black;">Payout/Discount Amount</th>
-                    <th style="border: 2px solid black;">Executive</th>
-                    <th style="border: 2px solid black;">DSA</th>
-                  </tr>
-                </thead>
+              <div style="overflow-y: auto; max-height: 400px;">
+                  <table class="table table-bordered" id="dataRecords" style="width: 100%;">
+                      <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                          <tr>
+                              <th style="border: 2px solid black;">Edit</th>
+                              <th style="border: 2px solid black;">Delete</th>
+                              <th style="border: 2px solid black;">Date</th>
+                              <th style="border: 2px solid black;">Name</th>
+                              <th style="border: 2px solid black;">Mobile Number</th>
+                              <th style="border: 2px solid black;">CKYC Number</th>
+                              <th style="border: 2px solid black;">Policy Number</th>
+                              <th style="border: 2px solid black;">Vehicle Number</th>
+                              <th style="border: 2px solid black;">Vehicle</th>
+                              <th style="border: 2px solid black;">Location</th>
+                              <th style="border: 2px solid black;">HP Bank</th>
+                              <th style="border: 2px solid black;">Business Type</th>
+                              <th style="border: 2px solid black;">Insurance Type</th>
+                              <th style="border: 2px solid black;">Insurance Portal</th>
+                              <th style="border: 2px solid black;">Insurance Company</th>
+                              <th style="border: 2px solid black;">Payment From Customer</th>
+                              <th style="border: 2px solid black;">Payment SOS</th>
+                              <th style="border: 2px solid black;">Policy Start Date</th>
+                              <th style="border: 2px solid black;">Policy End Date</th>
+                              <th style="border: 2px solid black;">NCB</th>
+                              <th style="border: 2px solid black;">Premium</th>
+                              <th style="border: 2px solid black;">OD/Net Premium</th>
+                              <th style="border: 2px solid black;">Commission</th>
+                              <th style="border: 2px solid black;">Profit</th>
+                              <th style="border: 2px solid black;">TDS</th>
+                              <th style="border: 2px solid black;">Profit After TDS</th>
+                              <th style="border: 2px solid black;">Net Profit</th>
+                              <th style="border: 2px solid black;">Payout/Discount %</th>
+                              <th style="border: 2px solid black;">Payout/Discount Amount</th>
+                              <th style="border: 2px solid black;">Executive</th>
+                              <th style="border: 2px solid black;">DSA</th>
+                          </tr>
+                      </thead>
                 <tbody>
                   {% for item in data %}
                   <tr>
@@ -906,31 +905,54 @@
                     });
                 }
                 
-                function downloadDataRecords() {
-                    var table = document.getElementById("dataRecords");
-                    var csv = [];
-                    
-                    // Get data rows
-                    for (var i = 0; i < table.rows.length; i++) {
-                        var row = [];
-                        for (var j = 0; j < table.rows[i].cells.length; j++) {
-                            row.push(table.rows[i].cells[j].innerText);
+                
+                    function downloadDataRecords() {
+                        // Get the table
+                        var table = document.getElementById("dataRecords");
+                        var rows = table.querySelectorAll("tr");
+                        
+                        // Initialize CSV string
+                        var csv = [];
+                        
+                        // Iterate over rows and columns to build CSV
+                        for (var i = 0; i < rows.length; i++) {
+                            var row = [], cols = rows[i].querySelectorAll("td, th");
+                            for (var j = 0; j < cols.length; j++) {
+                                // Remove any commas from the content to prevent CSV formatting issues
+                                var content = cols[j].innerText.replace(/,/g, "");
+                                row.push(content);
+                            }
+                            // Join row elements into a string and add to CSV
+                            csv.push(row.join(","));
                         }
-                        csv.push(row.join(","));
+                        
+                        // Combine rows into a single CSV string
+                        var csvString = csv.join("\n");
+                        
+                        // Create a blob containing the CSV data
+                        var blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+                        
+                        // Create a download link
+                        var link = document.createElement("a");
+                        if (link.download !== undefined) { // Feature detection
+                            // Set download link attributes
+                            var url = URL.createObjectURL(blob);
+                            link.setAttribute("href", url);
+                            link.setAttribute("download", "data_records.csv");
+                            
+                            // Append link to the body
+                            document.body.appendChild(link);
+                            
+                            // Trigger the download
+                            link.click();
+                            
+                            // Remove the link from the body
+                            document.body.removeChild(link);
+                        } else {
+                            alert("Your browser does not support downloading files.");
+                        }
                     }
-                    
-                    csv = csv.join("\n");
-            
-                    var blob = new Blob([csv], { type: 'text/csv' });
-            
-                    var a = document.createElement("a");
-                    a.href = URL.createObjectURL(blob);
-                    a.download = "data_records.csv";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
-              
+                  
               document.addEventListener("DOMContentLoaded", function() {
                 var currentUrl = window.location.href;
 

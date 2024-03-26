@@ -319,70 +319,77 @@
                     </div>
                 </div>
                 <div style="overflow-x: auto;">
-                  <!-- <center><h4 style="color: blue;">Loan Enquiry Records</h4></center> -->
-                  <table class="table table-bordered" id="dataRecords">
-                      <thead>
-                          <tr>
-                              <th style="border: 2px solid black;">Edit</th>
-                              <th style="border: 2px solid black;">Delete</th>
-                              <th style="border: 2px solid black;">Name</th>
-                              <th style="border: 2px solid black;">Number</th>
-                              <th style="border: 2px solid black;">Email</th>
-                              <th style="border: 2px solid black;">Remarks</th>
-                              <th style="border: 2px solid black;">RC Book</th>
-                              <th style="border: 2px solid black;">RC Book Image</th>
-                              <th style="border: 2px solid black;">Document </th>
-                              <th style="border: 2px solid black;">Document </th>
-                              <th style="border: 2px solid black;">Document </th>
-                              <th style="border: 2px solid black;">Document </th>
-                              <th style="border: 2px solid black;">Document </th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for item in data %}
-                          <tr>
-                                <td style="border: 2px solid black;">
-                                  <!-- Edit button -->
-                                  <form action="{% url 'edit_loan' item.id %}" method="get" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-default" style="background: none; border: none;">
-                                    <i class='fas fa-edit' style='font-size:15px; color: blue;'></i> 
-                                    </button>
-                                  </form>
-                                </td>
-                              <td style="border: 2px solid black;">
-                                  <!-- Delete button -->
-                                  <form action="{% url 'delete_loan_record' item.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this record?');">
-                                      {% csrf_token %}
-                                      <button type="submit" style="background: none; border: none;">
-                                          <i class="material-icons" style="color: red;">delete</i>
-                                      </button>
-                                  </form>
-                              </td>
-                              <td style="border: 2px solid black;">{{ item.name }}</td>
-                              <td style="border: 2px solid black;">{{ item.number }}</td>
-                              <td style="border: 2px solid black;">{{ item.email }}</td>
-                              <td style="border: 2px solid black;">{{ item.remarks}}</td>
-                              <td style="border: 2px solid black;">{% if item.rc_book %} Yes {% else %} No {% endif %}</td>
-                              <td style="border: 2px solid black;">
-                                  {% if item.rc_book_image %}
+                  <div style="overflow-y: auto; max-height: 400px;">
+                      <table class="table table-bordered" id="dataRecords">
+                          <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                              <tr>
+                                  <th style="border: 2px solid black;">Edit</th>
+                                  <th style="border: 2px solid black;">Delete</th>
+                                  <th style="border: 2px solid black;">Name</th>
+                                  <th style="border: 2px solid black;">Number</th>
+                                  <th style="border: 2px solid black;">Email</th>
+                                  <th style="border: 2px solid black;">Remarks</th>
+                                  <th style="border: 2px solid black;">RC Book</th>
+                                  <th style="border: 2px solid black;">RC Book Image</th>
+                                  <th style="border: 2px solid black;">Document</th>
+                                  <th style="border: 2px solid black;">Document</th>
+                                  <th style="border: 2px solid black;">Document</th>
+                                  <th style="border: 2px solid black;">Document</th>
+                                  <th style="border: 2px solid black;">Document</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for item in data %}
+                              <tr>
+                                  <td style="border: 2px solid black;">
+                                      <!-- Edit button -->
+                                      <form action="{% url 'edit_loan' item.id %}" method="get" style="display: inline;">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-default" style="background: none; border: none;">
+                                              <i class='fas fa-edit' style='font-size:15px; color: blue;'></i>
+                                          </button>
+                                      </form>
+                                  </td>
+                                  <td style="border: 2px solid black;">
+                                      <!-- Delete button -->
+                                      <form action="{% url 'delete_loan_record' item.id %}" method="post"
+                                          onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                          {% csrf_token %}
+                                          <button type="submit" style="background: none; border: none;">
+                                              <i class="material-icons" style="color: red;">delete</i>
+                                          </button>
+                                      </form>
+                                  </td>
+                                  <td style="border: 2px solid black;">{{ item.name }}</td>
+                                  <td style="border: 2px solid black;">{{ item.number }}</td>
+                                  <td style="border: 2px solid black;">{{ item.email }}</td>
+                                  <td style="border: 2px solid black;">{{ item.remarks }}</td>
+                                  <td style="border: 2px solid black;">{% if item.rc_book %} Yes {% else %} No {% endif %}</td>
+                                  <td style="border: 2px solid black;">
+                                      {% if item.rc_book_image %}
                                       <a href="{{ item.rc_book_image.url }}" target="_blank">Download</a>
-                                  {% else %}
+                                      {% else %}
                                       No RC Book Image
-                                  {% endif %}
-                              </td>
-                              <td style="border: 2px solid black;">{% if item.document1 %}<a href="{{ item.document1.url }}" target="_blank">Document </a>{% else %}No Document{% endif %}</td>
-                              <td style="border: 2px solid black;">{% if item.document2 %}<a href="{{ item.document2.url }}" target="_blank">Document </a>{% else %}No Document{% endif %}</td>
-                              <td style="border: 2px solid black;">{% if item.document3 %}<a href="{{ item.document3.url }}" target="_blank">Document </a>{% else %}No Document{% endif %}</td>
-                              <td style="border: 2px solid black;">{% if item.document4 %}<a href="{{ item.document4.url }}" target="_blank">Document </a>{% else %}No Document{% endif %}</td>
-
-                              <td style="border: 2px solid black;">{% if item.document5 %}<a href="{{ item.document5.url }}" target="_blank">Document </a>{% else %}No Document{% endif %}</td>
-
-                          </tr>
-                          {% endfor %}
-                      </tbody>
-                  </table>
+                                      {% endif %}
+                                  </td>
+                                  <td style="border: 2px solid black;">{% if item.document1 %}<a href="{{ item.document1.url }}"
+                                          target="_blank">Document</a>{% else %}No Document{% endif %}</td>
+                                  <td style="border: 2px solid black;">{% if item.document2 %}<a href="{{ item.document2.url }}"
+                                          target="_blank">Document</a>{% else %}No Document{% endif %}</td>
+                                  <td style="border: 2px solid black;">{% if item.document3 %}<a href="{{ item.document3.url }}"
+                                          target="_blank">Document</a>{% else %}No Document{% endif %}</td>
+                                  <td style="border: 2px solid black;">{% if item.document4 %}<a href="{{ item.document4.url }}"
+                                          target="_blank">Document</a>{% else %}No Document{% endif %}</td>
+                                  <td style="border: 2px solid black;">{% if item.document5 %}<a href="{{ item.document5.url }}"
+                                          target="_blank">Document</a>{% else %}No Document{% endif %}</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
               </div>
+              
+              
               
               
                 <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>

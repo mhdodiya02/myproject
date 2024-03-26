@@ -53,6 +53,18 @@ from .models import PolicyIssue  # Import your model here
 from .models import PolicyIssue, Loan, InsuranceEnquiry
 
 
+# def HomePage(request):
+#      return render (request, 'index.html')
+from django.shortcuts import render
+import plotly.graph_objects as go
+
+from django.db.models import Sum
+from django.shortcuts import render
+import plotly.graph_objects as go
+from .models import PolicyIssue  # Import your model here
+from .models import PolicyIssue, Loan, InsuranceEnquiry
+
+
 def HomePage(request):
     # Retrieve data from your database
     start_date = request.GET.get('start_date')
@@ -209,23 +221,25 @@ def HomePage(request):
     font=dict(size=15)  # Adjust the font size of the title
 )
      # Use current month as default value
-    default_start_date = date.today().replace(day=1)
-    default_end_date = date.today()
+    default_start_date = None
+    default_end_date = None
 
     if start_date is None or start_date == 'default_start_date':
-        start_date = default_start_date.strftime('%Y-%m-%d')
+        start_date = default_start_date
     if end_date is None or end_date == 'default_end_date':
-        end_date = default_end_date.strftime('%Y-%m-%d')
+        end_date = default_end_date
 
-    if start_date != 'default_start_date' and end_date != 'default_end_date':
+    if start_date != 'default_start_date' and end_date != 'default_end_date' and start_date is not None and end_date is not None:
         start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     df = fetch_data(request)
-    if start_date != 'default_start_date' and end_date != 'default_end_date':
+
+    if start_date != 'default_start_date' and end_date != 'default_end_date' and start_date is not None and end_date is not None:
         df = df[(df['date'] >= start_date) & (df['date'] <= end_date)]
 
     df['date'] = pd.to_datetime(df['date'])
+
 
     # Grouping data by insurance company and summing premiums
     df_grouped = df.groupby('I_company')['Premium'].sum().reset_index()
@@ -309,25 +323,6 @@ def HomePage(request):
     )
 )
 
-
-#     # Plotting the pie chart using Plotly Express
-#     fig_pie = px.pie(df, names="business_type", title="Net profit by business type")
-
-#     fig_pie.update_layout(
-#     # autosize=False,
-#     width=500,
-#     height=500,
-#     margin=dict(
-#         l=50,
-#         r=50,
-#         b=100,
-#         t=100,
-#         pad=4
-#     ),
-#     plot_bgcolor='rgba(0,0,0,0)',  # Transparent background
-#     paper_bgcolor='rgba(0,0,0,0)',  # Transparent plot area background
-# )
-
     # Plotting the donut chart using Plotly Graph Objects
     fig_donut = go.Figure(data=[go.Pie(labels=df['insurance_type'], values=df['netProfitResult'], hole=0.5)])
     fig_donut.update_layout(title="Net profit by insurance type")
@@ -410,7 +405,6 @@ def HomePage(request):
                                               'plot_html_donut_2': plot_html_donut_2, 
                                               'plot_html_donut': plot_html_donut,
                                               'plot_html_funnel':plot_html_funnel})
-
 
 def logout(request):
      return redirect ('login')

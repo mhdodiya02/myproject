@@ -1,3 +1,4 @@
+
 {% load static %}
 <!doctype html>
 <html lang="en">
@@ -416,30 +417,30 @@
 
 <script>
 // Function to fetch data and update charts using Plotly
-function updateCharts() {
-    // Fetch start date and end date from form
-    var startDate = document.getElementById('start_date').value;
-    var endDate = document.getElementById('end_date').value;
+// function updateCharts() {
+//     // Fetch start date and end date from form
+//     var startDate = document.getElementById('start_date').value;
+//     var endDate = document.getElementById('end_date').value;
 
-    // Make AJAX request to fetch new data
-    $.ajax({
-        type: 'GET',
-        url: '/fetch_data', // Replace with your server-side endpoint URL
-        data: {
-            start_date: startDate,
-            end_date: endDate
-        },
-        success: function(data) {
-            // Update charts here using Plotly
-            // For example, if you have a bar chart with ID 'chart1'
-            Plotly.newPlot('chart1', data.chart1Data);
-            // Similarly update other charts
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
+//     // Make AJAX request to fetch new data
+//     $.ajax({
+//         type: 'GET',
+//         url: '/fetch_data', // Replace with your server-side endpoint URL
+//         data: {
+//             start_date: startDate,
+//             end_date: endDate
+//         },
+//         success: function(data) {
+//             // Update charts here using Plotly
+//             // For example, if you have a bar chart with ID 'chart1'
+//             Plotly.newPlot('chart1', data.chart1Data);
+//             // Similarly update other charts
+//         },
+//         error: function(xhr, status, error) {
+//             console.error(error);
+//         }
+//     });
+// }
 
 // Call updateCharts function when form is submitted
 document.getElementById('date_filter_form').addEventListener('submit', function(event) {
