@@ -47,6 +47,12 @@ urlpatterns = [
     path('loan_dashboard/', loan_dashboard, name='loan_dashboard'),  
     path('insurance_dashboard/', insurance_dashboard, name='insurance_dashboard'), 
     path('untitle/', untitle, name='untitle'),   
+    path('edit_form/<int:pk>/', edit_view, name='edit_form'),
+    path('edit_form/<int:record_id>/', edit_view, name='edit_form'),
+    
+    
+
+
 ]
 
 

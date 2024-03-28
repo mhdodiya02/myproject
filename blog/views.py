@@ -799,6 +799,107 @@ def update_insurance_enquiry(request, record_id):
     return render(request, 'form.html', {'form': form1,'enquiries':enquiries})
 
 
+# def edit_view(request, record_id):
+#     record = get_object_or_404(InsuranceEnquiry, pk=record_id)
+    
+#     if request.method == 'POST':
+#         # Retrieve the data from the request
+#         name = request.POST.get('name')
+#         number = request.POST.get('number')
+#         email = request.POST.get('email')
+#         vehicle_number = request.POST.get('vehicle_number')
+#         rc_book_radio = request.POST.get('rc_book_radio')
+#         previous_policy_radio = request.POST.get('previous_policy_radio')
+#         end_date_str = request.POST.get('end_date')
+
+#         # Update the record fields
+#         record.name = name
+#         record.number = number
+#         record.email = email
+#         record.vehicle_number = vehicle_number
+
+#         # Handle RC Book data
+#         if rc_book_radio == 'yes':
+#             record.rc_book_image = request.FILES.get('rc_book_image')
+#         else:
+            
+#             record.rc_book_image = None
+            
+#         # Handle Previous Policy data
+#         if previous_policy_radio == 'yes':
+#             record.previous_policy_image = request.FILES.get('previous_policy_image')
+#             try:
+#                 record.end_date = parse_date(end_date_str)
+#             except ValidationError:
+#                 # Handle the case where the end date is not in the correct format
+#                 pass
+#         else:
+#             record.previous_policy_image = None
+#             record.end_date = None
+        
+#         # Save the updated record
+#         record.save()
+
+#         # Redirect to a success page or any other page after successful update
+#         return redirect('update_enquiry', record_id=record.id)
+#     else:
+#         return render(request, 'editform.html', {'record': record})
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.core.exceptions import ValidationError
+# from django.utils.dateparse import parse_date
+# from .models import InsuranceEnquiry
+
+# def edit_view(request, record_id):
+#     record = get_object_or_404(InsuranceEnquiry, pk=record_id)
+#     # Your existing view code here:
+#     if request.method == 'POST':
+#         # Retrieve the data from the request
+#         name = request.POST.get('name')
+#         number = request.POST.get('number')
+#         email = request.POST.get('email')
+#         vehicle_number = request.POST.get('vehicle_number')
+#         rc_book_radio = request.POST.get('rc_book_radio')
+#         previous_policy_radio = request.POST.get('previous_policy_radio')
+#         end_date_str = request.POST.get('end_date')
+
+#         # Find the record based on vehicle_number
+#         record = get_object_or_404(InsuranceEnquiry, vehicle_number=vehicle_number)
+
+#         # Update the record fields
+#         record.name = name
+#         record.number = number
+#         record.email = email
+
+#         # Handle RC Book data
+#         if rc_book_radio == 'Yes':
+#             record.rc_book_image = request.FILES.get('rc_book_image')
+
+#         # Handle Previous Policy data
+#         if previous_policy_radio == 'yes':
+#             record.previous_policy_image = request.FILES.get('previous_policy_image')
+#             # Handle end_date
+#             try:
+#                 record.end_date = parse_date(end_date_str)
+#             except ValidationError:
+#                 # Handle the case where the end date is not in the correct format
+#                 pass
+
+#         # Save the updated record
+#         record.save()
+
+#         # Redirect to a success page or any other page after successful update
+#         return redirect('update_enquiry',record_id=record.id)
+#     else:
+#         # Render the form template
+#         # Assuming 'record' is the object you want to edit
+#         return render(request, 'editform.html', {'record': record})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
+from .models import InsuranceEnquiry
+
 def edit_view(request, record_id):
     record = get_object_or_404(InsuranceEnquiry, pk=record_id)
     
@@ -812,38 +913,51 @@ def edit_view(request, record_id):
         previous_policy_radio = request.POST.get('previous_policy_radio')
         end_date_str = request.POST.get('end_date')
 
+        # Find the record based on vehicle_number
+        record = get_object_or_404(InsuranceEnquiry, vehicle_number=vehicle_number)
+
         # Update the record fields
         record.name = name
         record.number = number
         record.email = email
-        record.vehicle_number = vehicle_number
 
         # Handle RC Book data
-        if rc_book_radio == 'yes':
-            record.rc_book_image = request.FILES.get('rc_book_image')
+        if rc_book_radio == 'Yes':
+            rc_book_image = request.FILES.get('rc_book_image')
+            if rc_book_image:
+                record.rc_book_image = rc_book_image  # Set RC Book Image if submitted
+            record.rc_book_radio = 'Yes'  # Ensure RC Book is set to Yes
         else:
-            
-            record.rc_book_image = None
-            
+            record.rc_book_image = None  # Clear the RC Book Image if RC Book is No
+            record.rc_book_radio = 'No'   # Set RC Book to No if RC Book is No
+
         # Handle Previous Policy data
         if previous_policy_radio == 'yes':
-            record.previous_policy_image = request.FILES.get('previous_policy_image')
+            previous_policy_image = request.FILES.get('previous_policy_image')
+            if previous_policy_image:
+                record.previous_policy_image = previous_policy_image  # Set Previous Policy Image if submitted
+            record.previous_policy_radio = 'Yes'  # Ensure Previous Policy is set to Yes
+            # Handle end_date
             try:
                 record.end_date = parse_date(end_date_str)
             except ValidationError:
                 # Handle the case where the end date is not in the correct format
                 pass
         else:
-            record.previous_policy_image = None
-            record.end_date = None
-        
+            record.previous_policy_image = None  # Clear the Previous Policy Image if Previous Policy is No
+            record.previous_policy_radio = 'No'   # Set Previous Policy to No if Previous Policy is No
+            record.end_date = None  # Clear the End Date if Previous Policy is No
+
         # Save the updated record
         record.save()
 
         # Redirect to a success page or any other page after successful update
         return redirect('update_enquiry', record_id=record.id)
     else:
+        # Render the form template
+        # Assuming 'record' is the object you want to edit
         return render(request, 'editform.html', {'record': record})
+
 
 
 def update_enquiry(request, pk):
@@ -975,7 +1089,7 @@ def loan(request):
         # Fetch all loan records
         loans = Loan.objects.all()
         # Redirect to success page or do something else
-        return redirect('success')  # Adjust the URL name according to your project
+        return redirect('loan')  # Adjust the URL name according to your project
 
     # Fetch data from the database (if required)
     loans = Loan.objects.all()
@@ -1893,3 +2007,5 @@ def insurance_dashboard(request):
 
     # Pass the Plotly HTML to the template for rendering
     return render(request, 'insurance_dashboard.html', {'plot_html_total_unique_names': plot_html_total_unique_names})
+
+

@@ -13,7 +13,7 @@
   <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/logo.png' %}" />
   <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> /edit/
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
   <!-- download -->
@@ -454,21 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-function downloadDashboard() {
-  html2canvas(document.body, {
-    scrollY: -window.scrollY,
-    scale: 2
-  }).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = pdf.internal.pageSize.getWidth();
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-    pdf.save('dashboard.pdf');
-  }).catch(error => {
-    console.error('An error occurred while generating PDF:', error);
-  });
-}
+
 </script>
 
 </body>
